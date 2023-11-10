@@ -1,44 +1,57 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 
 public class playerController : MonoBehaviour
 {
     public float speed = 4.5f;
-
     public float jumpForce = 12.0f;
-
-
     private Rigidbody2D body;
     private BoxCollider2D box;
+    private float disToGround;
+
+    private Vector3 startRay;
+
+    public bool onLadder;
+    
     // Start is called before the first frame update
     void Start()
     {
+        startRay = transform.position;
         box = GetComponent<BoxCollider2D>();
         body = GetComponent<Rigidbody2D>();
+        disToGround = GetComponent<BoxCollider2D>().bounds.extents.y;
     }
-
     // Update is called once per frame
     void Update()
     {
         float deltaX = Input.GetAxis("Horizontal") * speed;
-        Vector2 Movement = new Vector2(deltaX, body.velocity.y);
-        body.velocity = Movement;
+        float deltaZ = Input.GetAxis("Vertical") * speed;
 
-        Vector3 max = box.bounds.max;
-        Vector3 min = box.bounds.min;
-        Vector2 corner1 = new Vector2(max.x, min.y - 0.1f);
-        Vector2 corner2 = new Vector2(min.x, min.y - 0.2f);
-        Collider2D hit = Physics2D.OverlapArea(corner1, corner2);
-
-        bool grounded = false;
-
-        if(hit != null){
-            grounded = true;
+        if (!onLadder){
+            deltaZ = body.velocity.y;
         }
 
-        if(grounded && Input.GetKeyDown(KeyCode.Space)){
+        Vector2 Movement = new Vector2(deltaX, deltaZ);
+
+        body.velocity = Movement;
+        startRay = transform.position;
+        startRay.y += -disToGround- 0.1f;
+
+        RaycastHit2D  hit = Physics2D.Raycast(startRay, transform.TransformDirection(-Vector3.up), -0.2f);
+
+        Vector3 direction = transform.TransformDirection(-Vector3.up);
+        direction.y = -0.2f;
+        
+        Debug.DrawRay(startRay, direction, Color.red);
+
+        if(Input.GetKeyDown(KeyCode.Space) && Physics2D.Raycast(startRay, transform.TransformDirection(-Vector3.up), 0.2f)){
             body.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
         }
+    }
+    public void changeSize(){
+        transform.localScale = new Vector3(0.5f, 1.0f, 1.0f);
+        disToGround = box.bounds.extents.y;
     }
 }
