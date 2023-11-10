@@ -10,18 +10,15 @@ public class playerController : MonoBehaviour
     private Rigidbody2D body;
     private BoxCollider2D box;
     private float disToGround;
-
     private Vector3 startRay;
-
     public bool onLadder;
-    
     // Start is called before the first frame update
     void Start()
     {
         startRay = transform.position;
         box = GetComponent<BoxCollider2D>();
         body = GetComponent<Rigidbody2D>();
-        disToGround = GetComponent<BoxCollider2D>().bounds.extents.y;
+        disToGround = box.bounds.extents.y;
     }
     // Update is called once per frame
     void Update()
@@ -34,7 +31,7 @@ public class playerController : MonoBehaviour
         }
 
         Vector2 Movement = new Vector2(deltaX, deltaZ);
-
+        disToGround = box.bounds.extents.y;
         body.velocity = Movement;
         startRay = transform.position;
         startRay.y += -disToGround- 0.1f;
@@ -50,8 +47,7 @@ public class playerController : MonoBehaviour
             body.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
         }
     }
-    public void changeSize(){
-        transform.localScale = new Vector3(0.5f, 1.0f, 1.0f);
-        disToGround = box.bounds.extents.y;
+    public void changeSize(Vector3 size){
+        transform.localScale = size;
     }
 }
