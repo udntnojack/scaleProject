@@ -5,9 +5,6 @@ using UnityEngine;
 public class ladder : MonoBehaviour
 {
     void OnTriggerEnter2D(Collider2D hit){
-
-        Debug.Log("ladder");
-        
         if(hit.gameObject.name == "player"){
             hit.GetComponent<playerController>().onLadder = true;
         }

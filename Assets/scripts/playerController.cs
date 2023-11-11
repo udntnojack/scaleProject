@@ -40,8 +40,6 @@ public class playerController : MonoBehaviour
 
         Vector3 direction = transform.TransformDirection(-Vector3.up);
         direction.y = -0.2f;
-        
-        Debug.DrawRay(startRay, direction, Color.red);
 
         if(Input.GetKeyDown(KeyCode.Space) && Physics2D.Raycast(startRay, transform.TransformDirection(-Vector3.up), 0.2f)){
             body.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
