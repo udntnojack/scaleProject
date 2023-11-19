@@ -9,10 +9,11 @@ public class Managers : MonoBehaviour
 {
     public static PlayerManager Player {get; private set;}
     public static MissionManager Mission {get; private set;}
-
     private List<IGameManager> startSequence;
 
     void Awake(){
+        DontDestroyOnLoad(gameObject);
+        
         Player = GetComponent<PlayerManager>();
         Mission = GetComponent<MissionManager>();
 
@@ -41,10 +42,14 @@ public class Managers : MonoBehaviour
                     numReady++;
                 }
             }
-            if (numReady > lastReady)
+            if (numReady > lastReady){
                 Debug.Log($"Progress: {numReady}/{numModules}");
+                Messenger<int, int>.Broadcast(
+                    StartupEvent.MANAGERS_PROGRESS, numReady, numModules);
+            }
             yield return null;
         }
         Debug.Log("All managers started up");
+        Messenger.Broadcast(StartupEvent.MANAGERS_STARTED);
     }
 }

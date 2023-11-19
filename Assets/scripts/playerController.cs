@@ -29,17 +29,13 @@ public class playerController : MonoBehaviour
         if (!onLadder){
             deltaZ = body.velocity.y;
         }
-
         Vector2 Movement = new Vector2(deltaX, deltaZ);
+
         disToGround = box.bounds.extents.y;
         body.velocity = Movement;
+
         startRay = transform.position;
         startRay.y += -disToGround- 0.1f;
-
-        RaycastHit2D  hit = Physics2D.Raycast(startRay, transform.TransformDirection(-Vector3.up), -0.2f);
-
-        Vector3 direction = transform.TransformDirection(-Vector3.up);
-        direction.y = -0.2f;
 
         if(Input.GetKeyDown(KeyCode.Space) && Physics2D.Raycast(startRay, transform.TransformDirection(-Vector3.up), 0.2f)){
             body.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);

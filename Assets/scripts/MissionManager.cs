@@ -14,9 +14,12 @@ public class MissionManager : MonoBehaviour, IGameManager
         Debug.Log("Mission manager starting...");
 
         curLevel = 0;
-        maxLevel = 1;
+        maxLevel = 3;
 
         status = ManagerStatus.Started;
+    }
+    public void GoToMenu(){
+        SceneManager.LoadScene("menu");
     }
     public void GoToNext(){
         if(curLevel < maxLevel){
